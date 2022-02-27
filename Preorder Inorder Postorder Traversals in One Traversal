@@ -1,0 +1,71 @@
+/**
+* author: Darshika
+* Question Link: https://leetcode.com/problems/binary-tree-postorder-traversal/
+* Time Complexity: O(3n)
+* Space Complexity: O(n)
+*/
+
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode() {}
+ *     TreeNode(int val) { this.val = val; }
+ *     TreeNode(int val, TreeNode left, TreeNode right) {
+ *         this.val = val;
+ *         this.left = left;
+ *         this.right = right;
+ *     }
+ * }
+ */
+class Solution {
+    public List<Integer> postorderTraversal(TreeNode root) {
+        
+        if(root == null){
+            return new ArrayList<>();
+        }
+        Stack<Pair> st = new Stack<>();
+        List<Integer> preOrder = new ArrayList<>();
+        List<Integer> inOrder = new ArrayList<>();
+        List<Integer> postOrder = new ArrayList<>();
+        st.push(new Pair(1,root));
+        
+        while(!st.isEmpty()){
+            Pair pair = st.peek();
+            
+            if (pair.level == 1) {
+                preOrder.add(pair.node.val);
+                pair.level++;
+                if (pair.node.left != null) {
+                    st.push(new Pair(1, pair.node.left));
+                }
+            } else if (pair.level == 2) {
+                inOrder.add(pair.node.val);
+                pair.level++;
+                if (pair.node.right != null) {
+                    st.push(new Pair(1, pair.node.right));
+                }
+            } else {
+                postOrder.add(pair.node.val);
+                st.pop();
+            }
+        }
+        System.out.println("PreOrder : " + preOrder);
+        System.out.println("InOrder : " + inOrder);
+        System.out.println("PostOrder : " + postOrder);
+        return postOrder;
+    }
+    
+    class Pair{
+        
+        int level;
+        TreeNode node;
+        
+        public Pair(int level, TreeNode node) {
+            this.level = level;
+            this.node = node;
+        }
+    }
+}

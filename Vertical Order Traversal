@@ -1,0 +1,71 @@
+/**
+* author: Darshika
+* Question Link: https://leetcode.com/problems/vertical-order-traversal-of-a-binary-tree/
+* Time Complexity: O(n)
+* Space Complexity: O(n)
+*/
+
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode() {}
+ *     TreeNode(int val) { this.val = val; }
+ *     TreeNode(int val, TreeNode left, TreeNode right) {
+ *         this.val = val;
+ *         this.left = left;
+ *         this.right = right;
+ *     }
+ * }
+ */
+class Solution {
+    
+    class Tuple {
+        int row;//vertical
+        int col;//level
+        TreeNode node;
+        public Tuple(int row, int col, TreeNode node) {
+            this.row = row;
+            this.col = col;
+            this.node = node;
+        }
+    }
+    
+    public List<List<Integer>> verticalTraversal(TreeNode root) {
+        
+        Queue<Tuple> q = new LinkedList<>();
+        Map<Integer,Map<Integer,PriorityQueue<Integer>>> map = new TreeMap<>();
+        q.add(new Tuple(0,0,root));
+        
+        while(q.size() > 0) {//O(n)
+            Tuple rem = q.poll();
+            if(!map.containsKey(rem.row)) {
+                map.put(rem.row, new TreeMap<>());
+            }
+            if (!map.get(rem.row).containsKey(rem.col)) {
+                map.get(rem.row).put(rem.col, new PriorityQueue<>());
+            }
+            map.get(rem.row).get(rem.col).offer(rem.node.val);//log1
+            if(rem.node.left != null) {
+                q.add(new Tuple(rem.row-1,rem.col+1,rem.node.left));
+            }
+            if(rem.node.right != null) {
+                q.add(new Tuple(rem.row+1,rem.col+1,rem.node.right));
+            }
+        }
+        //System.out.println(map);
+        List<List<Integer>> res = new ArrayList<>();
+        for(Map<Integer, PriorityQueue<Integer>> level: map.values()) {//O(n)
+            List<Integer> temp = new ArrayList<>();
+            for(PriorityQueue<Integer> pq : level.values()) {
+                while(pq.size() > 0) {
+                    temp.add(pq.poll());
+                }
+            }
+            res.add(temp);
+        }
+        return res;
+    }
+}

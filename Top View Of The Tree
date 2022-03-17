@@ -1,0 +1,65 @@
+
+/**
+* author: Darshika
+* Question link: https://www.codingninjas.com/codestudio/problems/top-view-of-the-tree_799401?source=youtube&amp;campaign=Striver_Tree_Videos&amp;utm_source=youtube&amp;utm_medium=affiliate&amp;utm_campaign=Striver_Tree_Videos&leftPanelTab=0
+* Time Complexity: O(nLogn)
+* Space Complexity: O(n) n - no of nodes in the tree
+*/
+
+import java.util.*;
+/************************************************************
+
+    Following is the TreeNode class structure:
+
+    class BinaryTreeNode {
+		int val;
+		BinaryTreeNode left;
+		BinaryTreeNode right;
+
+		BinaryTreeNode(int val) {
+			this.val = val;
+			this.left = null;
+			this.right = null;
+		}
+	}
+
+************************************************************/
+
+public class Solution {
+	public static ArrayList<Integer> getTopView(BinaryTreeNode root) {
+		// Write your code here.
+        if (root == null) {
+            return new ArrayList<>();
+        }
+        Map<Integer,Integer> temp = new TreeMap<>();
+        Queue<Pair> q = new LinkedList<>();
+        q.offer(new Pair(root, 0));
+        temp.put(0,root.val);
+        while(q.size() > 0) {
+            Pair rem = q.poll();
+            if (!temp.containsKey(rem.level)) {
+                temp.put(rem.level, rem.node.val);
+            } 
+            if (rem.node.left != null) {
+                q.offer(new Pair(rem.node.left, rem.level-1));
+            }
+            if (rem.node.right != null) {
+                q.offer(new Pair(rem.node.right, rem.level+1));
+            }
+        }
+        ArrayList<Integer> res = new ArrayList<>();
+        for (Map.Entry<Integer,Integer> map : temp.entrySet()) {
+            res.add(map.getValue());
+        }
+        return res;
+	}
+    public static class Pair {
+        BinaryTreeNode node;
+        int level;
+        public Pair(BinaryTreeNode node, int level) {
+            this.node = node;
+            this.level = level;
+        }
+        
+    }
+}

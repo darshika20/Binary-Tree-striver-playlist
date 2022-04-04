@@ -1,0 +1,42 @@
+/**
+* author: Darshika
+* Question link: https://www.interviewbit.com/problems/path-to-given-node/
+* Time Complexity: O(n)
+* Space Complexity: O(n)
+*/
+
+/**
+ * Definition for binary tree
+ * class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode(int x) {
+ *      val = x;
+ *      left=null;
+ *      right=null;
+ *     }
+ * }
+ */
+public class Solution {
+    public ArrayList<Integer> solve(TreeNode A, int B) {
+        ArrayList<Integer> res = new ArrayList<>();
+        helper(A, B, res);
+        return res;
+    }
+
+    private boolean helper(TreeNode node, int target, ArrayList<Integer> res) {
+        if (node == null) {
+            return false;
+        }
+        res.add(node.val);
+        if (node.val == target) {
+            return true;
+        }
+        if (helper(node.left, target, res) || helper(node.right, target, res)) {
+            return true;
+        } 
+        res.remove(res.size()-1);
+        return false;
+    }
+}
